@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "825459549063",
+    "firebase_url": "https://locationaware-51c42.firebaseio.com",
+    "project_id": "locationaware-51c42",
+    "storage_bucket": "locationaware-51c42.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:825459549063:android:7edf6e5fb6f73a96",
+        "android_client_info": {
+          "package_name": "danandroid.course.locationaware"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "825459549063-e1lgl732735vlfdels2p3kt6av1n98bl.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "danandroid.course.locationaware",
+            "certificate_hash": "6a58118ec800e5ce375d5372b86f53b84c86e240"
+          }
+        },
+        {
+          "client_id": "825459549063-i8a3b0s5kpi1qrf8ruse0lcd2s5bv8rv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAsvMN1eZxlUmCBzWf9xBMw6ZvLnoeiH4c"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "825459549063-i8a3b0s5kpi1qrf8ruse0lcd2s5bv8rv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
