@@ -1,11 +1,20 @@
 package danandroid.course.locationaware;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Editable;
-import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -27,12 +36,47 @@ public class SignInActivity extends AppCompatActivity {
 
     @OnTextChanged(R.id.etName)
     public void etChanged (CharSequence text){
-        Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
     }
 
     @OnEditorAction(R.id.etName)
-    public void etAction(){
-        Toast.makeText(this, "action", Toast.LENGTH_SHORT).show();
+    public boolean etAction(TextView tv, int actionCode, KeyEvent e){
+        if (etName.getText().toString().length() < 2){
+            etName.setError("Invalid name...");
+            return true;
+        }
+        FirebaseAuth.getInstance().
+                signInAnonymously().
+                addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if (task.isSuccessful()){
+                    //save the user name and goto maps.
+                    String userName = etName.getText().toString();
+                    String uid = task.getResult().getUser().getUid();
+                    //1) ref the users table->uid curretn user
+                    DatabaseReference ref =
+                            FirebaseDatabase.getInstance().getReference("users").child(uid);
+
+                    //2) ref.setValue (userName)
+                    ref.setValue(userName);
+
+                    //goto Maps Activity:
+                    Intent intent = new Intent(SignInActivity.this, MapsActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+
+                }else {
+                    //get the exception
+                    Exception e = task.getException();
+                    //test that exceptionis not null
+                    if (e != null)
+                        Toast.makeText(SignInActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                    //show error:
+                }
+            }
+        });
+        return true;
     }
 
 }
