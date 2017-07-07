@@ -1,6 +1,7 @@
 package danandroid.course.locationaware;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -9,6 +10,7 @@ import android.util.Log;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class MapsActivity extends AppCompatActivity{
 
@@ -61,6 +63,19 @@ public class MapsActivity extends AppCompatActivity{
     }
 
     private void initWithUser() {
+        SharedPreferences prefs = getSharedPreferences("userId", MODE_PRIVATE);
+        String token = prefs.getString("userId", null /*default value in case it's not in yet*/);
+        if (token != null){
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+            if (user == null) return;
+            FirebaseDatabase.getInstance().
+                    getReference("userIds").
+                    child(user.getUid()).
+                    child("token").
+                    setValue(token);
+        }
+
 
     }
 

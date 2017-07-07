@@ -1,13 +1,20 @@
 package danandroid.course.locationaware;
 
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -40,14 +47,55 @@ public class FencingFragment extends Fragment {
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+
+//        //The sending side:
+//        Intent message = new Intent("ItunesChannel");
+//        message.putExtra("json", result);
+//
+//        LocalBroadcastManager.getInstance(this).sendBroadcast(message);
+
+        //What do we do with the message (onReceive):
+        BroadcastReceiver receiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                String json = intent.getStringExtra("json");
+                Toast.makeText(context, json, Toast.LENGTH_SHORT).show();
+            }
+        };
+
+        IntentFilter filter = new IntentFilter("ItunesChannel");
+
+        LocalBroadcastManager.getInstance(getContext()).registerReceiver(receiver,filter);
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
     }
 
     @OnClick(R.id.fabNotify)
-    public void onViewClicked() {
+    public void onNotifyClicked() {
+//        Intent intent = new Intent(getContext(), NotificationService.class);
+//        getActivity().startService(intent);
+
+        //alarm manager may help us schedule repeating tasks
+        AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
+
         Intent intent = new Intent(getContext(), NotificationService.class);
-        getActivity().startService(intent);
+        PendingIntent pi = PendingIntent.getService(getContext(), 10, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+
+        //alarmManager.set();
+        alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, 10*1000, 60*1000, pi);
+        //alarmManager.setInexactRepeating();
+
+        //alarmManager.setExact();
+        //alarmManager.setExactAndAllowWhileIdle();
+
+
+
     }
 }
